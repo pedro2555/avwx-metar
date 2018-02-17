@@ -12,11 +12,9 @@
     <iron-ajax
       id="ajax"
       auto={{auto}}
-      url="[[url]]"
+      url="[[_url]]"
       handle-as="json"
       last-response="{{_metar}}"></iron-ajax>
-
-      <slot></slot>
   </template>
 
   <script>
@@ -34,23 +32,27 @@
       static get properties() {
         return {
           station: {
+            type: String
+          },
+          metar: {
             type: String,
-            reflectedToProperty: true
+            notify: true,
+            reflectToAttribute: true
+          },
+          metarData: {
+            type: Object,
+            notify: true,
+            reflectToAttribute: true
+          },
+          auto: {
+            type: Boolean,
+            reflectToAttribute: true
           },
           _metar: {
             type: Object,
             value: undefined
           },
-          metar: {
-            type: Object,
-            readOnly: true,
-            notify: true
-          },
-          auto: {
-            type: Boolean,
-            reflectedToProperty: true
-          },
-          url: {
+          _url: {
             computed: '_computeUrl(station)'
           }
         };
@@ -64,18 +66,18 @@
       };
 
       _computeUrl(station) {
-        console.log(station);
         if (station.length == 4) {
-          this.$.url = [
+          return [
             "https://avwx.rest/api/metar",
-            station,
-            "?options=info,translate"
-          ].join('/');
+            station
+          ].join('/') + "?options=info,translate";
         }
+        return null;
       }
 
       _parseResponse(response) {
-        this.$.metar.report = response['Raw-Report'];
+        this.metar = response['Raw-Report'];
+        this.metarData = response;
       }
     }
 
