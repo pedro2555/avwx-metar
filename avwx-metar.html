@@ -1,0 +1,84 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<dom-module id="avwx-metar">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <iron-ajax
+      id="ajax"
+      auto={{auto}}
+      url="[[url]]"
+      handle-as="json"
+      last-response="{{_metar}}"></iron-ajax>
+
+      <slot></slot>
+  </template>
+
+  <script>
+    /**
+     * `avwx-metar`
+     * A polymer element wrapping metar information from
+     * [AVWX](https://avwx.rest/)
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AvwxMetar extends Polymer.Element {
+      static get is() { return 'avwx-metar'; }
+      static get properties() {
+        return {
+          station: {
+            type: String,
+            reflectedToProperty: true
+          },
+          _metar: {
+            type: Object,
+            value: undefined
+          },
+          metar: {
+            type: Object,
+            readOnly: true,
+            notify: true
+          },
+          auto: {
+            type: Boolean,
+            reflectedToProperty: true
+          },
+          url: {
+            computed: '_computeUrl(station)'
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_parseResponse(_metar)',
+          '_computeUrl(station)'
+        ];
+      };
+
+      _computeUrl(station) {
+        console.log(station);
+        if (station.length == 4) {
+          this.$.url = [
+            "https://avwx.rest/api/metar",
+            station,
+            "?options=info,translate"
+          ].join('/');
+        }
+      }
+
+      _parseResponse(response) {
+        this.$.metar.report = response['Raw-Report'];
+      }
+    }
+
+    window.customElements.define(AvwxMetar.is, AvwxMetar);
+  </script>
+</dom-module>
