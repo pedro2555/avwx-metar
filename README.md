@@ -27,6 +27,7 @@ A Polymer 2 wrapper around the API at [avwx.rest/api](https://avwx.rest)
 ## Credits
 
 Michael <michaeel@mdupont.com> for the awesome API
+
 Polymer Team for obvious reasons
 
 ## License
