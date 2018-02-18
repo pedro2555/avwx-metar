@@ -1,21 +1,34 @@
-# \<avwx-metar\>
+# AVWX Metar [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/owner/my-element)
 
-A polymer element wrapping metar information from [AVWX](https://avwx.rest/)
+A Polymer 2 wrapper around the API at [avwx.rest/api](https://avwx.rest)
 
-## Install the Polymer-CLI
+## Installation
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
+`bower install --save pedro2555/avwx-metar`
 
-## Viewing Your Element
+## Usage
 
+```html
+<avwx-metar
+  auto
+  station="{{station}}"
+  metar="{{metar}}"
+  metar-data="{{metarData}}">
+</avwx-metar>
 ```
-$ polymer serve
-```
+## Contributing
 
-## Running Tests
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
 
-```
-$ polymer test
-```
+## Credits
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+Michael <michaeel@mdupont.com> for the awesome API
+Polymer Team for obvious reasons
+
+## License
+
+GPLv2
