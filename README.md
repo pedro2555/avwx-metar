@@ -1,4 +1,4 @@
-# AVWX Metar [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/owner/my-element)
+# AVWX Metar [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/pedro2555/avwx-metar)
 
 A Polymer 2 wrapper around the API at [avwx.rest/api](https://avwx.rest)
 
@@ -13,8 +13,7 @@ A Polymer 2 wrapper around the API at [avwx.rest/api](https://avwx.rest)
   auto
   station="{{station}}"
   metar="{{metar}}"
-  metar-data="{{metarData}}">
-</avwx-metar>
+  metar-data="{{metarData}}"></avwx-metar>
 ```
 ## Contributing
 
