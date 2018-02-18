@@ -1,6 +1,41 @@
+<!--
+@license
+AVWX Metar Polymer Element
+Copyright (C) 2018  Pedro Rodrigues <prodrigues1990@gmail.com>
+
+This file is part of AVWX Metar Polymer Element.
+
+AVWX Metar Polymer Element is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 2 of the License.
+
+AVWX Metar Polymer Element is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with AVWX Metar Polymer Element.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 
+ <!--
+`avwx-metar`
+A polymer element wrapping metar information from
+[AVWX](https://avwx.rest/)
+
+<avwx-metar
+  auto
+  station="KFJK"
+  metar="{{metar}}">
+  </avwx-metar>
+
+@customElement
+@polymer
+@demo demo/index.html
+ -->
 <dom-module id="avwx-metar">
   <template>
     <style>
@@ -18,40 +53,60 @@
   </template>
 
   <script>
-    /**
-     * `avwx-metar`
-     * A polymer element wrapping metar information from
-     * [AVWX](https://avwx.rest/)
-     *
-     * @customElement
-     * @polymer
-     * @demo demo/index.html
-     */
     class AvwxMetar extends Polymer.Element {
       static get is() { return 'avwx-metar'; }
       static get properties() {
         return {
+          /**
+           * 4 letter station icao identifier
+           */
           station: {
             type: String
           },
+          /**
+           * The text metar report, as published by the observation station
+           * also available via metarData['Raw-Report']
+           */
           metar: {
             type: String,
             notify: true,
             reflectToAttribute: true
           },
+          /**
+           * The full metar report from AVWX, includes translations.
+           * Check a general response to view the fields available:
+           *
+           * https://avwx.rest/api/metar/kjfk?options=info,translate
+           *
+           */
           metarData: {
             type: Object,
             notify: true,
             reflectToAttribute: true
           },
+          /**
+           * Passed directly to the iron-ajax Element, requests for metar
+           * reports are tried automatically, once `station` has exactly 4
+           * characters, assuming this is true.
+           *
+           * use getMetar() for manually requesting, the `station` char limit
+           * still applies.
+           */
           auto: {
             type: Boolean,
             reflectToAttribute: true
           },
+          /**
+           * The response from iron-ajax, use to parse the raw report into a
+           * property just to facilitate usage.
+           */
           _metar: {
             type: Object,
             value: undefined
           },
+          /**
+           * The generated url to request metar from http://avwx.rest.api
+           */
           _url: {
             computed: '_computeUrl(station)'
           }
@@ -60,11 +115,22 @@
 
       static get observers() {
         return [
-          '_parseResponse(_metar)',
-          '_computeUrl(station)'
+          '_parseResponse(_metar)'
         ];
       };
 
+      /**
+       * Force request a new metar, requires a valid URL (ie.: a 4 letter
+       * string set in `station`).
+       */
+      getMetar() {
+        if (url != null) { this.$.ajax.generateRequest(); }
+      }
+
+      /**
+       * Generates the url for the iron-ajax element, called on `station` value
+       * change.
+       */
       _computeUrl(station) {
         if (station.length == 4) {
           return [
@@ -75,6 +141,9 @@
         return null;
       }
 
+      /**
+       * Parses out the raw metar to an exposed HTML property, for ease of usage
+       */
       _parseResponse(response) {
         this.metar = response['Raw-Report'];
         this.metarData = response;
